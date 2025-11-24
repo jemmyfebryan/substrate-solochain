@@ -9,6 +9,7 @@ edition = "2021"
 members = [
     "node",
     "pallets/template",
+    "pallets/defi",
     "runtime",
 ]
 resolver = "2"
@@ -57,6 +58,7 @@ frame-support = { version = "40.1.0", default-features = false }
 frame-system-benchmarking = { version = "40.0.0", default-features = false }
 frame-system-rpc-runtime-api = { version = "36.0.0", default-features = false }
 frame-try-runtime = { version = "0.46.0", default-features = false }
+pallet-identity = { version = "40.0.0", default-features = false }
 pallet-aura = { version = "39.0.0", default-features = false }
 pallet-balances = { version = "41.1.0", default-features = false }
 pallet-grandpa = { version = "40.0.0", default-features = false }
@@ -72,6 +74,7 @@ sp-storage = { version = "22.0.0", default-features = false }
 sp-transaction-pool = { version = "36.0.0", default-features = false }
 sp-version = { version = "39.0.0", default-features = false }
 substrate-wasm-builder = { version = "26.0.1", default-features = false }
+hex-literal = "0.3.1"
 
 [profile.release]
 opt-level = 3

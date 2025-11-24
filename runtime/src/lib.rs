@@ -19,6 +19,13 @@ use sp_runtime::{
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
+use frame_support::{
+    parameter_types,
+    traits::{ConstU32, ConstU128},
+};
+// use pallet_identity::Data;
+use pallet_identity::legacy::IdentityInfo;
+
 pub use frame_system::Call as SystemCall;
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
@@ -104,7 +111,8 @@ pub const MILLI_UNIT: Balance = 1_000_000_000;
 pub const MICRO_UNIT: Balance = 1_000_000;
 
 /// Existential deposit.
-pub const EXISTENTIAL_DEPOSIT: Balance = MILLI_UNIT;
+// pub const EXISTENTIAL_DEPOSIT: Balance = MILLI_UNIT;
+pub const EXISTENTIAL_DEPOSIT: Balance = 1;
 
 /// The version information used to identify this runtime when compiled natively.
 #[cfg(feature = "std")]
@@ -183,6 +191,78 @@ pub type Executive = frame_executive::Executive<
 	Migrations,
 >;
 
+
+parameter_types! {
+    pub const MaxAdditionalFields: u32 = 0;
+}
+
+// pub struct IdentityStruct {
+//     pub name: Data,
+//     pub email: Data,
+// }
+
+impl pallet_identity::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+
+    type Currency = Balances;
+
+    type BasicDeposit = ConstU128<{10 * UNIT}>;
+    type ByteDeposit = ConstU128<{10 * MILLI_UNIT}>;
+    type UsernameDeposit = ConstU128<{1 * UNIT}>;
+    type SubAccountDeposit = ConstU128<{2 * UNIT}>;
+
+    type MaxSubAccounts = ConstU32<0>;
+
+    // Provided by pallet_identity::types
+    type IdentityInformation = IdentityInfo<MaxAdditionalFields>;
+
+    type MaxRegistrars = ConstU32<0>;
+    type Slashed = ();    // or () if you don't want to redirect slashes
+
+	// Origins are your chain’s permission system, no one can change anything
+	type ForceOrigin = frame_system::EnsureNever<AccountId>;
+	type RegistrarOrigin = frame_system::EnsureNever<AccountId>;
+	type UsernameAuthorityOrigin = frame_system::EnsureNever<AccountId>;
+
+
+    type OffchainSignature = sp_runtime::MultiSignature;
+    type SigningPublicKey = <Signature as Verify>::Signer;
+
+
+    type PendingUsernameExpiration =
+        ConstU32<1000>; // blocks
+    type UsernameGracePeriod =
+        ConstU32<10_000>;
+
+    type MaxSuffixLength = ConstU32<32>;
+    type MaxUsernameLength = ConstU32<64>;
+
+    type WeightInfo = pallet_identity::weights::SubstrateWeight<Runtime>;
+
+    // #[cfg(feature = "runtime-benchmarks")]
+    // type BenchmarkHelper = ();
+
+}
+
+// Pallet Defi
+pub use pallet_defi;
+parameter_types! {
+	pub const NumberOfBlocksYearly: u32 = 5256000;
+}
+
+impl pallet_defi::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+	
+	type Currency = Balances;
+	type NumberOfBlocksYearly = NumberOfBlocksYearly;
+
+    type WeightInfo = pallet_defi::weights::SubstrateWeight<Runtime>;
+
+    // #[cfg(feature = "runtime-benchmarks")]
+    // type BenchmarkHelper = ();
+
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 #[frame_support::runtime]
 mod runtime {
@@ -222,7 +302,13 @@ mod runtime {
 	#[runtime::pallet_index(6)]
 	pub type Sudo = pallet_sudo;
 
-	// Include the custom logic from the pallet-template in the runtime.
 	#[runtime::pallet_index(7)]
+	pub type Identity = pallet_identity;
+
+	#[runtime::pallet_index(8)]
+	pub type Defi = pallet_defi;
+
+	// Include the custom logic from the pallet-template in the runtime.
+	#[runtime::pallet_index(9)]
 	pub type Template = pallet_template;
 }

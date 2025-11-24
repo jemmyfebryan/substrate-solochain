@@ -23,6 +23,7 @@ use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_consensus_grandpa::AuthorityId as GrandpaId;
 use sp_genesis_builder::{self, PresetId};
 use sp_keyring::Sr25519Keyring;
+use hex_literal::hex;
 
 // Returns the genesis config presets populated with given parameters.
 fn testnet_genesis(
@@ -39,7 +40,7 @@ fn testnet_genesis(
 				.collect::<Vec<_>>(),
 		},
 		aura: pallet_aura::GenesisConfig {
-			authorities: initial_authorities.iter().map(|x| (x.0.clone())).collect::<Vec<_>>(),
+			authorities: initial_authorities.iter().map(|x| x.0.clone()).collect::<Vec<_>>(),
 		},
 		grandpa: pallet_grandpa::GenesisConfig {
 			authorities: initial_authorities.iter().map(|x| (x.1.clone(), 1)).collect::<Vec<_>>(),
@@ -60,6 +61,7 @@ pub fn development_config_genesis() -> Value {
 			Sr25519Keyring::Bob.to_account_id(),
 			Sr25519Keyring::AliceStash.to_account_id(),
 			Sr25519Keyring::BobStash.to_account_id(),
+			hex!("d4b8a45ed3dbf2d9312ba679b915eece208568aca534c5821aa2d1137d45a455").into(),
 		],
 		sp_keyring::Sr25519Keyring::Alice.to_account_id(),
 	)
