@@ -245,23 +245,23 @@ impl pallet_identity::Config for Runtime {
 }
 
 // Pallet Defi
-pub use pallet_defi;
-parameter_types! {
-	pub const NumberOfBlocksYearly: u32 = 5256000;
-}
+// pub use pallet_defi;
+// parameter_types! {
+// 	pub const NumberOfBlocksYearly: u32 = 5256000;
+// }
 
-impl pallet_defi::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
+// impl pallet_defi::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
 	
-	type Currency = Balances;
-	type NumberOfBlocksYearly = NumberOfBlocksYearly;
+// 	type Currency = Balances;
+// 	type NumberOfBlocksYearly = NumberOfBlocksYearly;
 
-    type WeightInfo = pallet_defi::weights::SubstrateWeight<Runtime>;
+//     type WeightInfo = pallet_defi::weights::SubstrateWeight<Runtime>;
 
-    // #[cfg(feature = "runtime-benchmarks")]
-    // type BenchmarkHelper = ();
+//     // #[cfg(feature = "runtime-benchmarks")]
+//     // type BenchmarkHelper = ();
 
-}
+// }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 #[frame_support::runtime]
@@ -305,10 +305,10 @@ mod runtime {
 	#[runtime::pallet_index(7)]
 	pub type Identity = pallet_identity;
 
-	#[runtime::pallet_index(8)]
-	pub type Defi = pallet_defi;
+	// #[runtime::pallet_index(8)]
+	// pub type Defi = pallet_defi;
 
 	// Include the custom logic from the pallet-template in the runtime.
-	#[runtime::pallet_index(9)]
+	#[runtime::pallet_index(8)]
 	pub type Template = pallet_template;
 }
